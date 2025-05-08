@@ -14,7 +14,8 @@
     "password_lost_sent_title": "Password reset email sent",
     "password_lost_sent_message": "An email has been sent to <strong>{{ username }}</strong> to reset your password",
     "password_lost_error_title": "Password reset error",
-    "password_lost_error_message": "Unable to send a password reset email, please contact your administrator for a manual reset"
+    "password_lost_error_message": "Unable to send a password reset email, please contact your administrator for a manual reset",
+    "register": "Create an account"
   },
   "passwordlost": {
     "title": "Password lost",
@@ -26,6 +27,17 @@
     "submit": "Change my password",
     "error_title": "Error changing your password",
     "error_message": "Your password recovery request is expired, please ask for a new one on the login page"
+  },
+  "register": {
+    "title": "Register",
+    "message": "Please enter your username and password to create an account",
+    "submit": "Create my account",
+    "username": "Username",
+    "email": "E-mail",
+    "password": "Password",
+    "password_confirm": "Password (confirm)",
+    "error_title": "Error creating your account",
+    "error_message": "This username is already taken by another user"
   },
   "index": {
     "toggle_navigation": "Toggle navigation",
