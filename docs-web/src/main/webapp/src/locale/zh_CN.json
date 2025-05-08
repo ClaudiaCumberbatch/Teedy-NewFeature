@@ -36,8 +36,11 @@
     "email": "邮箱",
     "password": "密码",
     "password_confirm": "密码 (确认)",
+    "create_success_title": "注册成功",
+    "create_success_message": "管理员审核后将激活您的帐号",
     "error_title": "注册出错",
-    "error_message": "该用户名或邮箱已被占用"
+    "error_password_not_match": "密码和确认密码不匹配",
+    "error_message": "创建帐号失败，请联系管理员"
   },
   "index": {
     "toggle_navigation": "切换导航",

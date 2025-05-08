@@ -8,40 +8,42 @@ angular.module('docs').controller('Register', function ($scope, $uibModalInstanc
   $scope.password = '';
   $scope.confirmPassword = '';
   $scope.email = '';
+
+  // Close function
   $scope.close = function (username) {
     $uibModalInstance.close(username);
   };
-
-  console.log('Register controller');
 
   // Register function
   $scope.register = function (password, confirmPassword, username, email) {
     console.log(password, confirmPassword, username, email);
     if (password !== confirmPassword) {
-      console.log('Passwords do not match');
-      var title = $translate.instant('login.register_error_title');
-      var msg = $translate.instant('login.register_error_message');
+      var title = $translate.instant('register.error_title');
+      var msg = $translate.instant('register.error_password_not_match');
       var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
       $dialog.messageBox(title, msg, btns);
       return;
     }
 
-    // Send a register email
+    // Invode the REST API to register the user
     console.log('Registering user:', username);
-    Restangular.one('user').post('register', {
+    Restangular.one('userRegistration').put('register', {
       username: username,
       password: password,
       email: email
     }).then(function () {
-      var title = $translate.instant('login.register_sent_title');
-      var msg = $translate.instant('login.register_sent_message', { username: username });
+      var title = $translate.instant('register.create_success_title');
+      var msg = $translate.instant('register.create_success_message', { username: username });
       var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
       $dialog.messageBox(title, msg, btns);
-    }, function () {
-      var title = $translate.instant('login.register_error_title');
-      var msg = $translate.instant('login.register_error_message');
+      $uibModalInstance.close(username);
+    }).catch(function (error) {
+      console.error('Registration failed:', error);
+      var title = $translate.instant('register.error_title');
+      var msg = $translate.instant('register.error_message');
       var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
       $dialog.messageBox(title, msg, btns);
     });
   };
+
 });

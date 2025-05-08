@@ -36,8 +36,11 @@
     "email": "E-mail",
     "password": "Password",
     "password_confirm": "Password (confirm)",
+    "create_success_title": "Account created",
+    "create_success_message": "After admin check, you can now login with your username and password",
     "error_title": "Error creating your account",
-    "error_message": "This username is already taken by another user"
+    "error_password_not_match": "Password and password confirmation must match",
+    "error_message": "Fail to create your account"
   },
   "index": {
     "toggle_navigation": "Toggle navigation",

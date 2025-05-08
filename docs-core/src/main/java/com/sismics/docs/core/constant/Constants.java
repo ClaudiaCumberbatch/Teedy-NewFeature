@@ -39,6 +39,11 @@ public class Constants {
      * Default generic user role.
      */
     public static final String DEFAULT_USER_ROLE = "user";
+
+    /**
+     * Default registration status.
+     */
+    public static final String DEFAULT_REGISTRATION_STATUS = "pending";
     
     /**
      * Supported document languages.
