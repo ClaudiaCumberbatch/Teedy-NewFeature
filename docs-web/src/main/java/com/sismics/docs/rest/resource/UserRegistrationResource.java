@@ -11,6 +11,9 @@ import com.sismics.rest.exception.ForbiddenClientException;
 import com.sismics.rest.exception.ServerException;
 import com.sismics.rest.util.ValidationUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +34,11 @@ import jakarta.ws.rs.core.Response;
  */
 @Path("/userRegistration")
 public class UserRegistrationResource extends BaseResource{
+    /**
+     * Logger.
+     */
+    private static final Logger log = LoggerFactory.getLogger(UserRegistrationResource.class);
+
     /**
      * Create a new registration request.
      *
@@ -114,7 +122,7 @@ public class UserRegistrationResource extends BaseResource{
      * @return Response
      */
     @GET
-    @Path("list")
+    @Path("/list")
     public Response list(
             @QueryParam("sort_column") Integer sortColumn,
             @QueryParam("asc") Boolean asc) {
@@ -131,14 +139,61 @@ public class UserRegistrationResource extends BaseResource{
             requests.add(Json.createObjectBuilder()
                     .add("id", userRegistrationDto.getId())
                     .add("username", userRegistrationDto.getUsername())
+                    .add("password", userRegistrationDto.getPassword())
                     .add("email", userRegistrationDto.getEmail())
                     .add("registration_date", userRegistrationDto.getRegistrationDate())
                     .add("status", userRegistrationDto.getStatus())
                     .add("admin_comment", userRegistrationDto.getAdminComment()));
         }
+
+        log.debug("fetch list good");
         
         JsonObjectBuilder response = Json.createObjectBuilder()
                 .add("requests", requests);
+        return Response.ok().entity(response.build()).build();
+    }
+
+    /**
+     * Approve a registration.
+     *
+     * @api {put} /approve Approve registration
+     * @apiName approveRegistration
+     * @apiParam {String} id ID
+     * @apiSuccess {String} status Status OK
+     * @apiError (client) ValidationError Validation error
+     * @apiError (server) UnknownError Unknown server error
+     * @apiVersion 1.5.0
+     *
+     * @param id ID of the registration to update
+     * @return Response
+     */
+    @PUT
+    @Path("/approveRegistration")
+    public Response approveRegistration(
+            @FormParam("id") String id) {
+        log.debug("inside approveRegistration, id: " + id);
+        if (!authenticate()) {
+            throw new ForbiddenClientException();
+        }
+        
+        // Update the user registration
+        UserRegistrationDao userRegistrationDao = new UserRegistrationDao();
+        UserRegistration userRegistration = userRegistrationDao.getById(id);
+        if (userRegistration == null) {
+            throw new ClientException("UserRegistrationNotFound", "User registration not found");
+        }
+        
+        try {
+            userRegistration.setStatus(Constants.APPROVED_REGISTRATION_STATUS);
+            userRegistrationDao.update(userRegistration, id);
+            log.info("User registration approved: " + userRegistration.getUsername());
+        } catch (Exception e) {
+            throw new ServerException("UnknownError", "Unknown server error", e);
+        }
+        
+        // Always return OK
+        JsonObjectBuilder response = Json.createObjectBuilder()
+                .add("status", "ok");
         return Response.ok().entity(response.build()).build();
     }
 }

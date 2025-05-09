@@ -17,20 +17,39 @@ angular.module('docs').controller('SettingsRegistration', function($scope, Resta
 
   // 批准注册请求
   $scope.approveRequest = function(request) {
-    Restangular.one('registration', request.id).post('approve').then(function() {
+    Restangular.one('userRegistration/approveRegistration').put({
+      id: request.id,
+    }).then(function() {
       alert('Request approved successfully!');
-      loadRequests(); // 重新加载列表
+      console.log('Request approved:', request);
+      $scope.loadRequests(); // 重新加载列表
+      console.log('fresh page');
     }, function(error) {
       console.error('Failed to approve request:', error);
       alert('Failed to approve request.');
     });
+
+    Restangular.one('user').customPUT({
+      username: request.username,
+      password: request.password,
+      email: request.email,
+      storage_quota: "10"
+    }, '', {}, {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }).then(function() {
+      console.log('user/register', request);
+    }, function(error) {
+      console.error('Failed to register user:', error);
+      alert('Failed to register user.');
+    });
+
   };
 
   // 拒绝注册请求
   $scope.rejectRequest = function(request) {
     Restangular.one('registration', request.id).post('reject').then(function() {
       alert('Request rejected successfully!');
-      loadRequests(); // 重新加载列表
+      $scope.loadRequests(); // 重新加载列表
     }, function(error) {
       console.error('Failed to reject request:', error);
       alert('Failed to reject request.');

@@ -44,6 +44,16 @@ public class Constants {
      * Default registration status.
      */
     public static final String DEFAULT_REGISTRATION_STATUS = "pending";
+
+    /**
+     * Approved registration status.
+     */
+    public static final String APPROVED_REGISTRATION_STATUS = "approved";
+    
+    /**
+     * Rejected registration status.
+     */
+    public static final String REJECTED_REGISTRATION_STATUS = "rejected";
     
     /**
      * Supported document languages.

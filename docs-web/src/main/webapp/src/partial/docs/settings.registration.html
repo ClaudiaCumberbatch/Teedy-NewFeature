@@ -8,14 +8,21 @@
       <tr>
         <th>Username</th>
         <th>Email</th>
+        <th>Status</th>
         <th>Requested Date</th>
         <th>Actions</th>
+        <th>Admin Comment</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="request in requests">
         <td>{{ request.username }}</td>
         <td>{{ request.email }}</td>
+        <td>
+          <span class="label label-warning" ng-if="request.status === 'pending'">Pending</span>
+          <span class="label label-success" ng-if="request.status === 'approved'">Approved</span>
+          <span class="label label-danger" ng-if="request.status === 'rejected'">Rejected</span>
+        </td>
         <td>{{ request.registration_date | date:'medium' }}</td>
         <td>
           <button class="btn btn-success btn-sm" ng-click="approveRequest(request)">
@@ -25,6 +32,11 @@
             Reject
           </button>
         </td>
+        <td>
+          <input type="text" class="form-control" ng-model="request.admin_comment" placeholder="Admin Comment" />
+          <button class="btn btn-primary btn-sm" ng-click="saveComment(request)">
+            Save
+          </button>
       </tr>
     </tbody>
   </table>

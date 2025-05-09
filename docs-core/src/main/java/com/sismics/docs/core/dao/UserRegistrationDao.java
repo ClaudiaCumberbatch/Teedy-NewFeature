@@ -56,7 +56,7 @@ public class UserRegistrationDao {
 
         // Get the registration
         Query q = em.createQuery("select r from UserRegistration r where r.id = :id");
-        q.setParameter("id", userRegistration.getId());
+        q.setParameter("id", id);
         UserRegistration userRegistrationDb = (UserRegistration) q.getSingleResult();
 
         // Update the registration
@@ -83,7 +83,7 @@ public class UserRegistrationDao {
         Map<String, Object> parameterMap = new HashMap<>();
         List<String> criteriaList = new ArrayList<>();
         
-        StringBuilder sb = new StringBuilder("select r.REG_ID as c0, r.REG_USERNAME as c1, r.REG_EMAIL as c2, r.REG_DATE as c3, r.REG_STATUS as c4, r.REG_ADMIN_COMMENT as c5");
+        StringBuilder sb = new StringBuilder("select r.REG_ID as c0, r.REG_USERNAME as c1, REG_PASSWORD as c2, r.REG_EMAIL as c3, r.REG_DATE as c4, r.REG_STATUS as c5, r.REG_ADMIN_COMMENT as c6");
         sb.append(" from T_USER_REGISTRATION r ");
 
         // Add criteria
@@ -121,6 +121,7 @@ public class UserRegistrationDao {
             UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
             userRegistrationDto.setId((String) o[i++]);
             userRegistrationDto.setUsername((String) o[i++]);
+            userRegistrationDto.setPassword((String) o[i++]);
             userRegistrationDto.setEmail((String) o[i++]);
             userRegistrationDto.setRegistrationDate(((Timestamp) o[i++]).getTime());
             userRegistrationDto.setStatus((String) o[i++]);
