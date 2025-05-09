@@ -1,0 +1,31 @@
+<div class="container">
+  <h3>Pending Registration Requests</h3>
+  <div class="alert alert-info" ng-if="requests.length === 0">
+    No pending registration requests.
+  </div>
+  <table class="table table-bordered table-hover" ng-if="requests.length > 0">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Requested Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="request in requests">
+        <td>{{ request.username }}</td>
+        <td>{{ request.email }}</td>
+        <td>{{ request.registration_date | date:'medium' }}</td>
+        <td>
+          <button class="btn btn-success btn-sm" ng-click="approveRequest(request)">
+            Approve
+          </button>
+          <button class="btn btn-danger btn-sm" ng-click="rejectRequest(request)">
+            Reject
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -2,19 +2,26 @@ package com.sismics.docs.rest.resource;
 
 import com.sismics.docs.core.constant.Constants;
 import com.sismics.docs.core.dao.*;
+import com.sismics.docs.core.dao.criteria.*;
+import com.sismics.docs.core.dao.dto.*;
 import com.sismics.docs.core.model.jpa.*;
-import com.sismics.docs.rest.constant.BaseFunction;
+import com.sismics.docs.core.util.jpa.SortCriteria;
 import com.sismics.rest.exception.ClientException;
+import com.sismics.rest.exception.ForbiddenClientException;
 import com.sismics.rest.exception.ServerException;
 import com.sismics.rest.util.ValidationUtil;
 
 import java.util.Date;
+import java.util.List;
 
 import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -81,6 +88,57 @@ public class UserRegistrationResource extends BaseResource{
         // Always return OK
         JsonObjectBuilder response = Json.createObjectBuilder()
                 .add("status", "ok");
+        return Response.ok().entity(response.build()).build();
+    }
+
+    /**
+     * Returns all registrations.
+     *
+     * @api {get} /userRegistration/list Get registration list
+     * @apiName GetUserList
+     * @apiGroup User
+     * @apiParam {Number} sort_column Column index to sort on
+     * @apiParam {Boolean} asc If true, sort in ascending order
+     * @apiSuccess {Object[]} registrations List of registrations
+     * @apiSuccess {String} requests.id ID
+     * @apiSuccess {String} requests.username Username
+     * @apiSuccess {String} requests.email E-mail
+     * @apiSuccess {Number} requests.registration_date Registration date (timestamp)
+     * @apiSuccess {String} registration_date.admin_comment Admin comment
+     * @apiError (client) ForbiddenError Access denied
+     * @apiPermission user
+     * @apiVersion 1.5.0
+     *
+     * @param sortColumn Sort index
+     * @param asc If true, ascending sorting, else descending
+     * @return Response
+     */
+    @GET
+    @Path("list")
+    public Response list(
+            @QueryParam("sort_column") Integer sortColumn,
+            @QueryParam("asc") Boolean asc) {
+        if (!authenticate()) {
+            throw new ForbiddenClientException();
+        }
+        
+        JsonArrayBuilder requests = Json.createArrayBuilder();
+        SortCriteria sortCriteria = new SortCriteria(sortColumn, asc);
+        
+        UserRegistrationDao userRegistrationDao = new UserRegistrationDao();
+        List<UserRegistrationDto> userRegistrationDtoList = userRegistrationDao.findByCriteria(new UserRegistrationCriteria(), sortCriteria);
+        for (UserRegistrationDto userRegistrationDto : userRegistrationDtoList) {
+            requests.add(Json.createObjectBuilder()
+                    .add("id", userRegistrationDto.getId())
+                    .add("username", userRegistrationDto.getUsername())
+                    .add("email", userRegistrationDto.getEmail())
+                    .add("registration_date", userRegistrationDto.getRegistrationDate())
+                    .add("status", userRegistrationDto.getStatus())
+                    .add("admin_comment", userRegistrationDto.getAdminComment()));
+        }
+        
+        JsonObjectBuilder response = Json.createObjectBuilder()
+                .add("requests", requests);
         return Response.ok().entity(response.build()).build();
     }
 }
