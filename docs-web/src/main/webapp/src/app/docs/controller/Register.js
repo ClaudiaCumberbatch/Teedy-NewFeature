@@ -25,13 +25,16 @@ angular.module('docs').controller('Register', function ($scope, $uibModalInstanc
       return;
     }
 
-    // Invode the REST API to register the user
+    // Invoke the REST API to register the user
     console.log('Registering user:', username);
-    Restangular.one('userRegistration').put('register', {
+    Restangular.one('userRegistration').put({
       username: username,
       password: password,
       email: email
-    }).then(function () {
+    }, '', {}, {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    ).then(function () {
       var title = $translate.instant('register.create_success_title');
       var msg = $translate.instant('register.create_success_message', { username: username });
       var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];

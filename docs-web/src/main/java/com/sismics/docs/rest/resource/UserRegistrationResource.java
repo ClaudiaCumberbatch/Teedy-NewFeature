@@ -64,13 +64,15 @@ public class UserRegistrationResource extends BaseResource{
         @FormParam("username") String username,
         @FormParam("password") String password,
         @FormParam("email") String email) {
+
+        log.debug("inside register, username: " + username + ", password: " + password + ", email: " + email);
         
         // Validate the input data
-        // username = ValidationUtil.validateLength(username, "username", 3, 50);
-        // ValidationUtil.validateUsername(username, "username");
-        // password = ValidationUtil.validateLength(password, "password", 8, 50);
-        // email = ValidationUtil.validateLength(email, "email", 1, 100);
-        // ValidationUtil.validateEmail(email, "email");
+        username = ValidationUtil.validateLength(username, "username", 3, 50);
+        ValidationUtil.validateUsername(username, "username");
+        password = ValidationUtil.validateLength(password, "password", 8, 50);
+        email = ValidationUtil.validateLength(email, "email", 1, 100);
+        ValidationUtil.validateEmail(email, "email");
 
         // Create the user registration
         UserRegistration userRegistration = new UserRegistration();
@@ -136,6 +138,7 @@ public class UserRegistrationResource extends BaseResource{
         UserRegistrationDao userRegistrationDao = new UserRegistrationDao();
         List<UserRegistrationDto> userRegistrationDtoList = userRegistrationDao.findByCriteria(new UserRegistrationCriteria(), sortCriteria);
         for (UserRegistrationDto userRegistrationDto : userRegistrationDtoList) {
+            log.debug("register username in dto: " + userRegistrationDto.getUsername());
             requests.add(Json.createObjectBuilder()
                     .add("id", userRegistrationDto.getId())
                     .add("username", userRegistrationDto.getUsername())

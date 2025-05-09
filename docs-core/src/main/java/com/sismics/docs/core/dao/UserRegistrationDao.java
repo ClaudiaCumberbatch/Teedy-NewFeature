@@ -1,4 +1,5 @@
 package com.sismics.docs.core.dao;
+import com.sismics.docs.core.constant.Constants;
 
 import com.google.common.base.Joiner;
 import com.sismics.docs.core.constant.AuditLogType;
@@ -29,14 +30,23 @@ public class UserRegistrationDao {
      * @param userRegistration the user registration
      * @return the ID of the created user registration
      */
-    public String create(UserRegistration userRegistration) {
+    public String create(UserRegistration userRegistration) throws Exception {
         // Create the registration UUID
         userRegistration.setId(UUID.randomUUID().toString());
 
+        // Checks for registration unicity
+        EntityManager em = ThreadLocalContext.get().getEntityManager();
+        Query q = em.createQuery("select r from UserRegistration r where r.username = :username");
+        q.setParameter("username", userRegistration.getUsername());
+        if (!q.getResultList().isEmpty()) {
+            throw new Exception("AlreadyExistingRegistrationUsername");
+        }
+
         // Create the user
         userRegistration.setRegistrationDate(new Date());
-        userRegistration.setStatus("PENDING");
-        userRegistration.setAdminComment(null);
+        userRegistration.setStatus(Constants.DEFAULT_REGISTRATION_STATUS);
+        userRegistration.setAdminComment("default comment");
+        em.persist(userRegistration);
 
         // Create audit log
         AuditLogUtil.create(userRegistration, AuditLogType.CREATE, userRegistration.getId());
