@@ -4,11 +4,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import org.checkerframework.checker.units.qual.s;
-
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
-import java.io.OutputStream;
 
 public class TranslateUtil {
     private static final String API_URL = "https://api.mymemory.translated.net/get";
@@ -17,8 +14,8 @@ public class TranslateUtil {
         System.out.println("Translating text: " + text + " to language: " + targetLang);
         // 简易使用 MyMemory 免费翻译 API（或可替换为其他服务如 Google Translate）
         String encodedText = URLEncoder.encode(text, "UTF-8");
-        // String urlStr = API_URL + "?q=" + encodedText + "&langpair=en|" + targetLang;
-        String urlStr = API_URL + "?q=" + encodedText + "&langpair=zh-cn|en";
+        String urlStr = API_URL + "?q=" + encodedText + "&langpair=zh-cn|" + targetLang;
+        // String urlStr = API_URL + "?q=" + encodedText + "&langpair=zh-cn|en";
         System.out.println("Request URL: " + urlStr);
 
         URL url = new URL(urlStr);

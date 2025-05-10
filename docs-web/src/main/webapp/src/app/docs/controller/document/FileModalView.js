@@ -90,8 +90,8 @@ angular.module('docs').controller('FileModalView', function ($uibModalInstance, 
   /**
    * Translate the file content.
    */
-  $scope.openTranslatedContent = function () {
-    window.open('../api/file/' + $stateParams.fileId + '/translate');
+  $scope.openTranslatedContent = function (lang) {
+    window.open('../api/file/' + $stateParams.fileId + '/translate?lang=' + lang);
   }
 
 

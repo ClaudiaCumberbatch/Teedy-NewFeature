@@ -31,8 +31,22 @@
     <button type="button" class="btn btn-default" uib-tooltip="Show text content" tooltip-append-to-body="true" ng-click="openFileContent()">
       <span class="fas fa-eye"></span>
     </button>
-    <button type="button" class="btn btn-default" uib-tooltip="Show translated content" tooltip-append-to-body="true" ng-click="openTranslatedContent()">
+    <!-- <button type="button" class="btn btn-default" uib-tooltip="Show translated content" tooltip-append-to-body="true" ng-click="openTranslatedContent()">
       <span class="fas fa-globe"></span>
+    </button> -->
+  </div>
+
+  <div class="form-inline" style="margin-top: 1em;">
+    <label for="langSelect">Translate to:</label>
+    <select id="langSelect" class="form-control" ng-model="selectedLang">
+      <option value="en">English</option>
+      <option value="fr">French</option>
+      <option value="de">German</option>
+      <option value="zh-CN">Chinese</option>
+      <option value="es">Spanish</option>
+    </select>
+    <button class="btn btn-primary" ng-click="openTranslatedContent(selectedLang)">
+      Open Translated Content
     </button>
   </div>
 </div>
