@@ -18,6 +18,7 @@ import com.sismics.docs.core.model.jpa.User;
 import com.sismics.docs.core.util.DirectoryUtil;
 import com.sismics.docs.core.util.EncryptionUtil;
 import com.sismics.docs.core.util.FileUtil;
+import com.sismics.docs.core.util.TranslateUtil;
 import com.sismics.rest.exception.ClientException;
 import com.sismics.rest.exception.ForbiddenClientException;
 import com.sismics.rest.exception.ServerException;
@@ -649,6 +650,44 @@ public class FileResource extends BaseResource {
                     .header(HttpHeaders.EXPIRES, "0");
         }
         return builder.build();
+    }
+
+    @GET
+    @Path("{id: [a-z0-9\\-]+}/translate")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response translate(
+            @PathParam("id") final String fileId,
+            @QueryParam("share") String shareId,
+            @QueryParam("lang") String targetLang) {
+
+        authenticate();
+
+        // if (Strings.isNullOrEmpty(targetLang)) {
+        //     throw new ClientException("MissingLanguage", "Target language must be provided");
+        // }
+
+        // 1. 获取文件
+        File file = findFile(fileId, shareId);
+
+        // 2. 获取明文内容（仅支持 text 类型）
+        String content = file.getContent();
+        if (Strings.isNullOrEmpty(content)) {
+            return Response.status(Response.Status.NO_CONTENT).entity("No text content found in file.").build();
+        }
+        System.out.println("File content: " + content);
+
+        // 3. 调用翻译工具类
+        try {
+            String translated = TranslateUtil.translate(content, targetLang);
+            System.out.println("Translated content: " + translated);
+            return Response.ok(translated)
+                    .header(HttpHeaders.CONTENT_TYPE, "text/plain; charset=utf-8")
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Translation failed: " + e.getMessage())
+                    .build();
+        }
     }
 
     /**
