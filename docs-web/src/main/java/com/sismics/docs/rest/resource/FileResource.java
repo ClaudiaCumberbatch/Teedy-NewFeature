@@ -652,6 +652,27 @@ public class FileResource extends BaseResource {
         return builder.build();
     }
 
+    /**
+     * Translate a file.
+     *
+     * @api {get} /file/:id/translate Translate a file
+     * @apiName GetFileTranslate
+     * @apiGroup File
+     * @apiParam {String} id File ID
+     * @apiParam {String} share Share ID
+     * @apiParam {String} lang Target language
+     * @apiSuccess {String} translation Translated text
+     * @apiError (client) ForbiddenError Access denied or document not visible
+     * @apiError (client) NotFound File not found
+     * @apiError (server) ServiceUnavailable Error reading the file
+     * @apiPermission none
+     * @apiVersion 1.5.0
+     *
+     * @param fileId File ID
+     * @param shareId Share ID
+     * @param targetLang Target language
+     * @return Response
+     */
     @GET
     @Path("{id: [a-z0-9\\-]+}/translate")
     @Produces(MediaType.TEXT_PLAIN)
